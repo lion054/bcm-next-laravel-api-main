@@ -1,0 +1,257 @@
+openapi: '3.0.2'
+info:
+  description: This API is RESTful API that supports both of mobile and web
+  title: BCM-Next RESTful API
+  version: '1.0'
+  contact:
+    name: bigmanliose
+    url: https://bitfriend.github.io
+    email: bigmanliose@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8000/api
+tags:
+  - name: user-controller
+    description: User Controller
+  - name: contact-controller
+    description: Contact Controller
+paths:
+  "/users":
+    get:
+      tags:
+        - user-controller
+      description: 'List users by search condition'
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Used for searching in first name and last name
+        - in: query
+          name: blocked
+          schema:
+            type: boolean
+          description: Used for filtering out whether blocked or not
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Page size in pagination
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number in pagination
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - user-controller
+      description: 'Create user'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                blocked:
+                  type: boolean
+              required:
+                - "first_name"
+                - "blocked"
+      responses:
+        '200':
+          description: OK
+  "/users/{id}":
+    get:
+      tags:
+        - user-controller
+      description: 'Show user'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of user to be fetched
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - user-controller
+      description: 'Update user'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of user to be updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                blocked:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - user-controller
+      description: 'Delete user'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of user to be deleted
+      responses:
+        '204':
+          description: OK
+  "/users/{id}/contacts":
+    get:
+      tags:
+        - user-controller
+      description: ''
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of user to be focused
+      responses:
+        '200':
+          description: OK
+  "/contacts":
+    get:
+      tags:
+        - contact-controller
+      description: 'List contacts by search condition'
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Used for searching in phone number
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum:
+              - Home
+              - Office
+          description: Used for filtering out whether Home or Office
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Page size in pagination
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Page number in pagination
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - contact-controller
+      description: 'Create contact'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - Home
+                    - Office
+                user_id:
+                  type: integer
+              required:
+                - "phone"
+                - "type"
+                - "user_id"
+      responses:
+        '200':
+          description: OK
+  "/contacts/{id}":
+    get:
+      tags:
+        - contact-controller
+      description: 'Show contact'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of contact to be fetched
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - contact-controller
+      description: 'Update contact'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of contact to be updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - Home
+                    - Office
+                user_id:
+                  type: integer
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - contact-controller
+      description: 'Delete contact'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: The ID of contact to be deleted
+      responses:
+        '204':
+          description: OK
